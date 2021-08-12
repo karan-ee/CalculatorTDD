@@ -9,12 +9,17 @@
 import Foundation
 
 class Calculator {
+    var memory: String = ""
     func add(_ x: Double, _ y: Double) -> Double{
-        return x+y
+        let result = x+y
+        storeInMemory(x: x, operation: "+", y: y, result: result)
+        return result
     }
     
     func multiply(_ x: Double, _ y: Double) -> Double{
-        return x*y
+        let result = x*y
+        storeInMemory(x: x, operation: "*", y: y, result: result)
+        return result
     }
     
     func divide(x: Double, y: Double) throws ->  Double {
@@ -23,6 +28,21 @@ class Calculator {
         }
         let value = x/y
         return trunc(value*1000000)/1000000.0
+    }
+    
+    func replay() -> String {
+        return memory
+    }
+    
+    private func storeInMemory(x:Double, operation: String, y: Double, result: Double) {
+        memory = memory.isEmpty ? memory : "\(memory); "
+        memory += "\(x.format()) \(operation) \(y.format()) = \(result.format())"
+    }
+}
+
+extension Double {
+    func format() -> String {
+        return String(format: "%.2f", self)
     }
 }
 
