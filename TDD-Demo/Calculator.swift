@@ -9,34 +9,47 @@
 import Foundation
 
 class Calculator {
-    var memory: String = ""
+    var memory = [String]()
+
     func add(_ x: Double, _ y: Double) -> Double{
         let result = x+y
-        storeInMemory(x: x, operation: "+", y: y, result: result)
+        addToMemory(x: x, operation: "+", y: y, result: result)
         return result
     }
     
     func multiply(_ x: Double, _ y: Double) -> Double{
         let result = x*y
-        storeInMemory(x: x, operation: "*", y: y, result: result)
+        addToMemory(x: x, operation: "*", y: y, result: result)
         return result
     }
     
-    func divide(x: Double, y: Double) throws ->  Double {
+    func divide(_ x: Double, _ y: Double) throws ->  Double {
         guard y != 0 else {
             throw CalculatorError.divideByZero
         }
         let value = x/y
-        return trunc(value*1000000)/1000000.0
+        let result = trunc(value*1000000)/1000000.0
+        addToMemory(x: x, operation: "/", y: y, result: result)
+        return result
     }
     
-    func replay() -> String {
-        return memory
+    func replay(_ howMany: Int) -> String {
+        if howMany <= 0 {
+            return ""
+        }
+
+        let operationsToReturn = memory
+            .prefix(howMany)
+            .joined(separator: "; ")
+
+        return operationsToReturn.isEmpty
+            ? "Nothing To Replay"
+            : operationsToReturn
     }
     
-    private func storeInMemory(x:Double, operation: String, y: Double, result: Double) {
-        memory = memory.isEmpty ? memory : "\(memory); "
-        memory += "\(x.format()) \(operation) \(y.format()) = \(result.format())"
+    private func addToMemory(x:Double, operation: String, y: Double, result: Double) {
+        let result = "\(x.format()) \(operation) \(y.format()) = \(result.format())"
+        memory.append(result)
     }
 }
 
